@@ -1,11 +1,10 @@
-NOTNOW 
+notnow 
 ===========================
-(we do not have a name yet)
 
 Julia, Anaissa, Esteban
 
 
-"Notnow" draws a generative animation onto the user's face, based on her/his unique features.
+"Notnow" draws a generative animation onto ~~the user's face~~ a screen, based on her/his unique features.
 
 
 Setup:
