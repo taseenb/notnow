@@ -138,6 +138,6 @@ public:
     bool verticalSetup; // whether camera and projector are in vertical
     
     
-    vector<Particle> p;
+    //vector<Particle> p;
     
 };

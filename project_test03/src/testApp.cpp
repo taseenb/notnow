@@ -44,7 +44,7 @@ void testApp::setup() {
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
     
-    verticalSetup = false;
+    verticalSetup = true;
     
 	//cam.initGrabber(640, 480);
     
@@ -263,6 +263,7 @@ void testApp::update() {
 	}
 }
 
+
 void testApp::draw() {
 	ofSetColor(255);
     
@@ -279,15 +280,7 @@ void testApp::draw() {
     face_outline.draw();
     ofPopMatrix();
     
-    
-    vinniGenerator();
-    
 }
-
-
-//void testApp::vinniGenerator() {
-//    ofCircle(100, 100, 5);
-//}
 
 
 void testApp::keyPressed(int key) {
