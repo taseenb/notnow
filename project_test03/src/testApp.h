@@ -4,11 +4,12 @@
 #include "ofxCv.h"
 #include "ofxOsc.h"
 #include "ofxKinect.h"
-
 #include "ofxFaceTrackerThreaded.h"
 
+// NOTNOW PROJECT ELEMENTS
+#include "particle.h"
+#include "GeneralAnimations.h"
 
-#include "Particle.h"
 
 class Graph {
 public:
@@ -96,7 +97,8 @@ public:
 	void update();
 	void draw();
 	void keyPressed(int key);
-    void vinniGenerator();
+    
+    ofPath getPathFromPolyline(ofPolyline polyLine);
 	
     // KINECT
     ofxKinect kinect; // camera
@@ -105,8 +107,6 @@ public:
 	ofxFaceTrackerThreaded tracker;
 	
 	ofFbo eyeFbo;
-    
-    ofFbo faceFbo;
     
 	ofPixels eyePixels;
 	ofImage sobelImg;
@@ -128,16 +128,41 @@ public:
     
     // NOTNOW PROJECT
     
-    int angle; // kinect angle (use UP and DOWN arrows)
+    int kinectAngle; // kinect angle (use UP and DOWN arrows)
     
-    ofPath face_outline;
-    ofRectangle face_boundingBox;
+    
+    ofRectangle faceBoundingBox;
     ofPixels rotatedImage;
     ofTexture rotatedTexture;
     
     bool verticalSetup; // whether camera and projector are in vertical
     
-    
     //vector<Particle> p;
+    
+    GeneralAnimations anim;
+    
+    
+    ofPolyline facePolyline;
+    ofPolyline leftEyePolyline;
+    ofPolyline rightEyePolyline;
+    ofPolyline innerMouthPolyline;
+    ofPolyline outerMouthPolyline;
+    ofPolyline noseBasePolyline;
+    ofPolyline noseBridgePolyline;
+    ofPolyline leftEyebrowPolyline;
+    ofPolyline rightEyebrowPolyline;
+    
+    ofPath facePath;
+//    ofPath leftEyePath;
+//    ofPath rightEyePath;
+//    ofPath innerMouthPath;
+//    ofPath outerMouthPath;
+//    ofPath noseBasePath;
+//    ofPath noseBridgePath;
+//    ofPath leftEyebrowPath;
+//    ofPath rightEyebrowPath;
+    
+//    vector<ofPolyline> facePolylines;
+//    vector<ofPath> facePaths;
     
 };

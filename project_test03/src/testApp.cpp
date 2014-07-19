@@ -43,17 +43,14 @@ void testApp::setup() {
 	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
-    
-    verticalSetup = true;
-    
-	//cam.initGrabber(640, 480);
+    verticalSetup = false;
     
     // KINECT IR CAMERA
     kinect.init(true); // shows infrared instead of RGB video image
     kinect.open();		// opens first available kinect
     // zero the tilt on startup
-	angle = 0;
-	kinect.setCameraTiltAngle(angle);
+	kinectAngle = 30;
+	kinect.setCameraTiltAngle(kinectAngle);
     
 	// FACE TRACKER
 	tracker.setup();
@@ -63,13 +60,15 @@ void testApp::setup() {
 	osc.setup("localhost", 8338);
     
     // FACE OUTLINE SETTINGS
-    face_outline.setFillColor(ofColor(0,0,0));
-    //face_outline.setStrokeColor(ofColor(255,255,0));
-    //face_outline.setStrokeWidth(2);
+    facePath.setFillColor(ofColor(0,0,0));
+    //facePath.setStrokeColor(ofColor(255,255,0));
+    //facePath.setStrokeWidth(2);
     
     ofBackground(0);
     
-    ofSetOrientation(OF_ORIENTATION_90_LEFT);
+    if (verticalSetup) {
+        ofSetOrientation(OF_ORIENTATION_90_LEFT);
+    }
 }
 
 void testApp::update() {
@@ -99,11 +98,25 @@ void testApp::update() {
 			rightInner = tracker.getImagePoint(42),
 			rightOuter = tracker.getImagePoint(45);
 			
-			ofPolyline leftEye = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE);
-			ofPolyline rightEye = tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE);
+            
+            // Face parts POLYLINES
+            facePolyline = tracker.getImageFeature(ofxFaceTracker::FACE_OUTLINE);
+			leftEyePolyline = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE);
+            rightEyePolyline = tracker.getImageFeature(ofxFaceTracker::RIGHT_EYE);
+            innerMouthPolyline = tracker.getImageFeature(ofxFaceTracker::INNER_MOUTH);
+            outerMouthPolyline = tracker.getImageFeature(ofxFaceTracker::OUTER_MOUTH);
+            noseBasePolyline = tracker.getImageFeature(ofxFaceTracker::NOSE_BASE);
+            noseBridgePolyline = tracker.getImageFeature(ofxFaceTracker::NOSE_BRIDGE);
+            leftEyebrowPolyline = tracker.getImageFeature(ofxFaceTracker::LEFT_EYEBROW);
+            rightEyebrowPolyline = tracker.getImageFeature(ofxFaceTracker::RIGHT_EYEBROW);
+            
+            
+            // Face parts SHAPES
+            facePath = getPathFromPolyline(facePolyline);
+
 			
-			ofVec2f leftCenter = leftEye.getBoundingBox().getCenter();
-			ofVec2f rightCenter = rightEye.getBoundingBox().getCenter();
+			ofVec2f leftCenter = leftEyePolyline.getBoundingBox().getCenter();
+			ofVec2f rightCenter = rightEyePolyline.getBoundingBox().getCenter();
 			
 			float leftRadius = (leftCenter.distance(leftInner) + leftCenter.distance(leftOuter)) / 2;
 			float rightRadius = (rightCenter.distance(rightInner) + rightCenter.distance(rightOuter)) / 2;
@@ -168,14 +181,6 @@ void testApp::update() {
 			normRight.addVertices(normRect.getVertices());
 			addTexCoords(normLeft, leftRectImg.getVertices());
 			addTexCoords(normRight, rightRectImg.getVertices());
-			
-            
-            // GENERATIVE ANIMATION INSIDE THE FACE
-            faceFbo.begin();
-            
-            
-            faceFbo.end();
-            
             
 			eyeFbo.begin();
 			ofSetColor(255);
@@ -231,36 +236,47 @@ void testApp::update() {
 			msg.addIntArg(rowGraph.getState() ? 1 : 0);
 			osc.sendMessage(msg);
             
-            
             // FACE OUTLINE UPDATE - WITH EYES
-            ofPolyline p = tracker.getImageFeature(ofxFaceTracker::FACE_OUTLINE);
+            faceBoundingBox = facePolyline.getBoundingBox();
+            facePath.clear();
             
-            face_boundingBox = p.getBoundingBox();
-            
-            face_outline.clear();
-            face_outline.rectangle(0, 0, 600, 800);
-            
-            for (int i=0; i < p.size(); i++) {
-                face_outline.lineTo(p[i]);
+            if (verticalSetup) {
+                facePath.rectangle(0, 0, 600, 800);
+            } else {
+                facePath.rectangle(0, 0, 800, 600);
             }
-            face_outline.close();
             
-            for (int i=0; i < leftEye.size(); i++) {
-                face_outline.lineTo(leftEye[i]);
+            for (int i=0; i < facePolyline.size(); i++) {
+                facePath.lineTo(facePolyline[i]);
             }
-            face_outline.close();
+            facePath.close();
             
-            for (int i=0; i < rightEye.size(); i++) {
-                face_outline.lineTo(rightEye[i]);
+            for (int i=0; i < leftEyePolyline.size(); i++) {
+                facePath.lineTo(leftEyePolyline[i]);
             }
-            face_outline.close();
+            facePath.close();
             
-		}
-        
-//        else{
-//            face_outline.clear();
-//        }
+            for (int i=0; i < rightEyePolyline.size(); i++) {
+                facePath.lineTo(rightEyePolyline[i]);
+            }
+            facePath.close();
+            
+		} else {
+            facePath.clear();
+        }
 	}
+    
+    // ANIMATION
+    anim.update(facePolyline,
+                leftEyePolyline,
+                rightEyePolyline,
+                innerMouthPolyline,
+                outerMouthPolyline,
+                noseBasePolyline,
+                noseBridgePolyline,
+                leftEyebrowPolyline,
+                rightEyebrowPolyline);
+    
 }
 
 
@@ -269,16 +285,32 @@ void testApp::draw() {
     
     ofPushMatrix();
     ofScale(2, 2, 0);
-    ofTranslate(-320/2, -240/2);
     
     if (verticalSetup) {
+        ofTranslate(-320/2, -240/2);
         rotatedTexture.draw(0,0);
     } else {
+        ofTranslate(-480/2, -360/2);
         kinect.draw(0, 0);
     }
     
-    face_outline.draw();
+    // DRAW THE ANIMATION IN THE BOUNDING BOX
+    anim.draw();
+    
     ofPopMatrix();
+    
+}
+
+
+ofPath testApp::getPathFromPolyline(ofPolyline polyLine) {
+    
+    ofPath path;
+    
+    for (int i=0; i < polyLine.size(); i++) {
+        path.lineTo(polyLine[i]);
+    }
+    
+    return path;
     
 }
 
@@ -290,17 +322,21 @@ void testApp::keyPressed(int key) {
     
     switch (key) {
         case OF_KEY_UP:
-			angle++;
-			if(angle>30) angle=30;
-			kinect.setCameraTiltAngle(angle);
+			kinectAngle++;
+			if(kinectAngle>30) kinectAngle=30;
+			kinect.setCameraTiltAngle(kinectAngle);
 			break;
 			
 		case OF_KEY_DOWN:
-			angle--;
-			if(angle<-30) angle=-30;
-			kinect.setCameraTiltAngle(angle);
+			kinectAngle--;
+			if(kinectAngle<-30) kinectAngle=-30;
+			kinect.setCameraTiltAngle(kinectAngle);
 			break;
     }
     
 }
+
+
+
+
 
