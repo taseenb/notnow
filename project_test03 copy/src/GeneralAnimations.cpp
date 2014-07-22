@@ -3,15 +3,16 @@
 
 void GeneralAnimations::update(ofxFaceTrackerThreaded & tracker) {
     
-    delaunayAnim.update(tracker);
-    
+    //crazyEyesAnim.update(tracker);
+
 }
 
 
 void GeneralAnimations::draw() {
     
-    delaunayAnim.draw();
     
+    //crazyEyesAnim.draw();
+
 }
 
 
@@ -26,9 +27,9 @@ void GeneralAnimations::blend() {
 
 void GeneralAnimations::clear() {
     
-//    ofFill();
-//    ofSetColor(255, 0, 0);
-//    ofRectangle(0,0,ofGetWidth(), ofGetHeight());
+    ofFill();
+    ofSetColor(255, 0, 0);
+    ofRectangle(0,0,ofGetWidth(), ofGetHeight());
     
 }
 

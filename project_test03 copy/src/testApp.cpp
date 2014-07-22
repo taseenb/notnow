@@ -40,11 +40,9 @@ void addTexCoords(ofMesh& to, const vector<T>& from) {
 using namespace ofxCv;
 
 void testApp::setup() {
-	ofSetFrameRate(60);
+	ofSetFrameRate(30);
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
-    ofEnableSmoothing();
-    
     verticalSetup = false;
     
     // KINECT IR CAMERA
@@ -267,14 +265,15 @@ void testApp::update() {
             
             
             // ANIMATION
-            //ofLog() << "FACE FOUND";
             animations.update(tracker);
             
             
 		} else {
             
-            //ofLog() << "FACE NOT FOUND";
             animations.clear();
+            
+            
+//            facePath.clear();
         }
 	}
     

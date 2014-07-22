@@ -5,10 +5,9 @@
 #include <iostream>
 #include "ofMain.h"
 //#include "ofxFaceTrackerThreaded.h"
-#include "DelaunayAnimation.h"
 
 // Animations
-//#include "CrazyEyes.h"
+#include "CrazyEyes.h"
 
 
 class GeneralAnimations : public ofBaseApp {
@@ -20,9 +19,8 @@ class GeneralAnimations : public ofBaseApp {
         void clear();
     
     // List of animations
-    //CrazyEyes crazyEyesAnim;
+    CrazyEyes crazyEyesAnim;
     
-    DelaunayAnimation delaunayAnim;
 };
 
 

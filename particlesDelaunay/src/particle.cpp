@@ -14,7 +14,7 @@ void particle::resetForce(){
 }
 
 //------------------------------------------------------------
-void particle::addForce(float x, float y){
+void particle::addForce(float x, float y) {
     // add in a force in X and Y for this frame.
     frc.x = frc.x + x;
     frc.y = frc.y + y;
@@ -23,12 +23,12 @@ void particle::addForce(float x, float y){
 //------------------------------------------------------------
 void particle::addRepulsionForce(float x, float y, float radius, float scale){
     
-	// ----------- (1) make a vector of where this position is: 
+	// ----------- (1) make a vector of where this position is:
 	
 	ofVec2f posOfForce;
 	posOfForce.set(x,y);
 	
-	// ----------- (2) calculate the difference & length 
+	// ----------- (2) calculate the difference & length
 	
 	ofVec2f diff	= pos - posOfForce;
 	float length	= diff.length();
@@ -55,12 +55,12 @@ void particle::addRepulsionForce(float x, float y, float radius, float scale){
 //------------------------------------------------------------
 void particle::addAttractionForce(float x, float y, float radius, float scale){
     
-	// ----------- (1) make a vector of where this position is: 
+	// ----------- (1) make a vector of where this position is:
 	
 	ofVec2f posOfForce;
 	posOfForce.set(x,y);
 	
-	// ----------- (2) calculate the difference & length 
+	// ----------- (2) calculate the difference & length
 	
 	ofVec2f diff	= pos - posOfForce;
 	float length	= diff.length();
@@ -87,11 +87,11 @@ void particle::addAttractionForce(float x, float y, float radius, float scale){
 //------------------------------------------------------------
 void particle::addRepulsionForce(particle &p, float radius, float scale){
 	
-	// ----------- (1) make a vector of where this particle p is: 
+	// ----------- (1) make a vector of where this particle p is:
 	ofVec2f posOfForce;
 	posOfForce.set(p.pos.x,p.pos.y);
 	
-	// ----------- (2) calculate the difference & length 
+	// ----------- (2) calculate the difference & length
 	
 	ofVec2f diff	= pos - posOfForce;
 	float length	= diff.length();
@@ -120,11 +120,11 @@ void particle::addRepulsionForce(particle &p, float radius, float scale){
 //------------------------------------------------------------
 void particle::addAttractionForce(particle & p, float radius, float scale){
 	
-	// ----------- (1) make a vector of where this particle p is: 
+	// ----------- (1) make a vector of where this particle p is:
 	ofVec2f posOfForce;
 	posOfForce.set(p.pos.x,p.pos.y);
 	
-	// ----------- (2) calculate the difference & length 
+	// ----------- (2) calculate the difference & length
 	
 	ofVec2f diff	= pos - posOfForce;
 	float length	= diff.length();
@@ -154,11 +154,11 @@ void particle::addAttractionForce(particle & p, float radius, float scale){
 //------------------------------------------------------------
 void particle::addClockwiseForce(particle &p, float radius, float scale){
 	
-	// ----------- (1) make a vector of where this particle p is: 
+	// ----------- (1) make a vector of where this particle p is:
 	ofVec2f posOfForce;
 	posOfForce.set(p.pos.x,p.pos.y);
 	
-	// ----------- (2) calculate the difference & length 
+	// ----------- (2) calculate the difference & length
 	
 	ofVec2f diff	= pos - posOfForce;
 	float length	= diff.length();
@@ -187,11 +187,11 @@ void particle::addClockwiseForce(particle &p, float radius, float scale){
 //------------------------------------------------------------
 void particle::addCounterClockwiseForce(particle &p, float radius, float scale){
 	
-	// ----------- (1) make a vector of where this particle p is: 
+	// ----------- (1) make a vector of where this particle p is:
 	ofVec2f posOfForce;
 	posOfForce.set(p.pos.x,p.pos.y);
 	
-	// ----------- (2) calculate the difference & length 
+	// ----------- (2) calculate the difference & length
 	
 	ofVec2f diff	= pos - posOfForce;
 	float length	= diff.length();
@@ -223,8 +223,8 @@ void particle::addCounterClockwiseForce(particle &p, float radius, float scale){
 void particle::addDampingForce(){
 	
 	// the usual way to write this is  vel *= 0.99
-	// basically, subtract some part of the velocity 
-	// damping is a force operating in the oposite direction of the 
+	// basically, subtract some part of the velocity
+	// damping is a force operating in the oposite direction of the
 	// velocity vector
 	
     frc.x = frc.x - vel.x * damping;
@@ -237,12 +237,12 @@ void particle::setInitialCondition(float px, float py, float vx, float vy){
 	vel.set(vx,vy);
 }
 
-void particle::setStaticPosition(float px, float py){    
+void particle::setStaticPosition(float px, float py){
     staticPos.set(px, py);
 }
 
 //------------------------------------------------------------
-void particle::update(){	
+void particle::update(){
 	vel = vel + frc;
 	pos = pos + vel;
 }

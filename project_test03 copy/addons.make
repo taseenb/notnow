@@ -3,4 +3,3 @@ ofxOsc
 ofxCv
 ofxFaceTracker
 ofxKinect
-ofxDelaunay
